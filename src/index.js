@@ -1,36 +1,15 @@
 import './pages/index.css';
 import { initialCards } from "./scripts/cards";
+import { createCardElement, deleteCard } from './scripts/card';
+
+// В файле index.js должны остаться:
+// объявления и инициализация глобальных констант и переменных с DOM-элементами страницы,
+// обработчики событий (при открытии и закрытии попапов; при отправке форм; обработчик, открывающий попап при клике по изображению карточки);
+// вызовы других функций, подключённых из созданных модулей, которым нужно будет передавать объявленные здесь переменные и обработчики.
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
 
-// @todo: Функция создания карточки
-function createCardElement(cardData, deleteCard) {
-  const cardElement = cardTemplate
-    .querySelector('.places__item.card')
-    .cloneNode(true);
-  const cardImage = cardElement.querySelector('.card__image');
-  const cardTitle = cardElement.querySelector('.card__title');
-  const cardDeleteButton = cardElement.querySelector('.card__delete-button');
-
-  cardImage.src = cardData.link;
-  cardImage.alt = `Фотография из коллекции пейзажных фотографии. На фото ${cardData.name}`;
-
-  cardTitle.textContent = cardData.name;
-
-  cardDeleteButton.addEventListener('click', deleteCard);
-
-  return cardElement;
-}
-
-// @todo: Функция удаления карточки
-function deleteCard(evt) {
-  const card = evt.target.closest('.places__item.card');
-
-  card.remove();
-}
-
-// @todo: Вывести карточки на страницу
 initialCards.forEach((card) =>
-  placesList.append(createCardElement(card, deleteCard))
+  placesList.append(createCardElement(cardTemplate, card, deleteCard))
 );
