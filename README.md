@@ -29,10 +29,11 @@ npm set registry https://registry.npmjs.org/
 
 10. images & css load as assets;
 
-11. load Post css and two plugins for it:
+11. ```npm i -D css-loader mini-css-extract-plugin``` - how to work with css + @import statements to create single css bundle
+
+12. load Post css and two plugins for it:
 ```npm i -D postcss-loader autoprefixer cssnano```
 
-12. create ```postcss.config.js``` file
+13. create ```postcss.config.js``` file
 
-13. ```npm i -D mini-css-extract-plugin```
 
