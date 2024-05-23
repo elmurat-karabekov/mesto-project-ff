@@ -1,5 +1,3 @@
-import { openModal } from "./modal";
-
 export function createCardElement(cardTemplate, cardData, showImagePopup, deleteCard, likeCard) {
   const cardElement = cardTemplate
     .querySelector('.places__item.card')
@@ -22,19 +20,6 @@ export function createCardElement(cardTemplate, cardData, showImagePopup, delete
   cardLikeButton.addEventListener('click', likeCard);
 
   return cardElement;
-}
-
-export function showImagePopup(cardImage) {
-  const popup = document.querySelector('.popup_type_image');
-  const popupImage = document.querySelector('.popup__image');
-  const popupImageCaption = document.querySelector('.popup__caption');
-
-  popupImage.src = cardImage.src;
-  popupImage.alt = cardImage.alt;
-
-  popupImageCaption.textContent = cardImage.dataset.imageCaption;
-
-  openModal(popup);
 }
 
 export function deleteCard(evt) {

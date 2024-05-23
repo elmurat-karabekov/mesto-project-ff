@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { initialCards } from "./scripts/cards";
-import { createCardElement, deleteCard, likeCard, showImagePopup } from './scripts/card';
+import { createCardElement, deleteCard, likeCard } from './scripts/card';
 import { openModal, closeModal, closeModalOnOverlay } from './scripts/modal';
 
 const cardTemplate = document.querySelector('#card-template').content;
@@ -23,6 +23,19 @@ const profileDescription = document.querySelector('.profile__description');
 const addCardForm = document.forms['new-place'];
 const cardNameInput = addCardForm.querySelector('.popup__input_type_card-name');
 const cardLinkInput = addCardForm.querySelector('.popup__input_type_url');
+
+const popup = document.querySelector('.popup_type_image');
+const popupImage = document.querySelector('.popup__image');
+const popupImageCaption = document.querySelector('.popup__caption');
+
+function showImagePopup(cardImage) {
+  popupImage.src = cardImage.src;
+  popupImage.alt = cardImage.alt;
+
+  popupImageCaption.textContent = cardImage.dataset.imageCaption;
+
+  openModal(popup);
+}
 
 initialCards.forEach((card) =>
   placesList.append(createCardElement(cardTemplate, card, showImagePopup, deleteCard, likeCard))
