@@ -1,5 +1,5 @@
 import './pages/index.css';
-import { initialCards } from "./scripts/cards";
+import { initialCards } from './scripts/cards';
 import { createCardElement, deleteCard, likeCard } from './scripts/card';
 import { openModal, closeModal, closeModalOnOverlay } from './scripts/modal';
 
@@ -15,7 +15,9 @@ const addCardPopup = document.querySelector('.popup_type_new-card');
 
 const editProfileForm = document.forms['edit-profile'];
 const nameInput = editProfileForm.querySelector('.popup__input_type_name');
-const jobInput = editProfileForm.querySelector('.popup__input_type_description');
+const jobInput = editProfileForm.querySelector(
+  '.popup__input_type_description'
+);
 
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
@@ -38,7 +40,9 @@ function showImagePopup(cardImage) {
 }
 
 initialCards.forEach((card) =>
-  placesList.append(createCardElement(cardTemplate, card, showImagePopup, deleteCard, likeCard))
+  placesList.append(
+    createCardElement(cardTemplate, card, showImagePopup, deleteCard, likeCard)
+  )
 );
 
 function handleProfileFormSubmit(evt) {
@@ -54,17 +58,25 @@ function handleCardFormSubmit(evt) {
 
   const newCardData = {
     name: cardNameInput.value,
-    link: cardLinkInput.value
-  }
+    link: cardLinkInput.value,
+  };
 
-  placesList.prepend((createCardElement(cardTemplate, newCardData, showImagePopup, deleteCard, likeCard)))
+  placesList.prepend(
+    createCardElement(
+      cardTemplate,
+      newCardData,
+      showImagePopup,
+      deleteCard,
+      likeCard
+    )
+  );
 
   addCardForm.reset();
-  closeModal(addCardPopup)
+  closeModal(addCardPopup);
 }
 
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
-addCardForm.addEventListener('submit', handleCardFormSubmit)
+addCardForm.addEventListener('submit', handleCardFormSubmit);
 
 editProfileBtn.addEventListener('click', () => {
   nameInput.value = profileName.textContent;
@@ -77,12 +89,12 @@ addCardButton.addEventListener('click', () => {
   openModal(addCardPopup);
 });
 
-pagePopups.forEach(popup => {
+pagePopups.forEach((popup) => {
   popup.addEventListener('click', (evt) => {
     if (evt.target.classList.contains('popup__close')) {
       closeModal(popup);
     }
-  })
+  });
 
   popup.addEventListener('click', closeModalOnOverlay);
 });

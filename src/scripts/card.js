@@ -1,4 +1,10 @@
-export function createCardElement(cardTemplate, cardData, showImagePopup, deleteCard, likeCard) {
+export function createCardElement(
+  cardTemplate,
+  cardData,
+  showImagePopup,
+  deleteCard,
+  likeCard
+) {
   const cardElement = cardTemplate
     .querySelector('.places__item.card')
     .cloneNode(true);
@@ -15,7 +21,7 @@ export function createCardElement(cardTemplate, cardData, showImagePopup, delete
 
   cardImage.addEventListener('click', () => {
     showImagePopup(cardImage);
-  })
+  });
   cardDeleteButton.addEventListener('click', deleteCard);
   cardLikeButton.addEventListener('click', likeCard);
 
