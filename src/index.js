@@ -2,6 +2,7 @@ import './pages/index.css';
 import { initialCards } from './scripts/cards';
 import { createCardElement, deleteCard, likeCard } from './scripts/card';
 import { openModal, closeModal, closeModalOnOverlay } from './scripts/modal';
+import { clearValidation, enableValidation } from './scripts/validation';
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
@@ -22,6 +23,9 @@ const jobInput = editProfileForm.querySelector(
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
+nameInput.value = profileName.textContent;
+jobInput.value = profileDescription.textContent;
+
 const addCardForm = document.forms['new-place'];
 const cardNameInput = addCardForm.querySelector('.popup__input_type_card-name');
 const cardLinkInput = addCardForm.querySelector('.popup__input_type_url');
@@ -29,6 +33,17 @@ const cardLinkInput = addCardForm.querySelector('.popup__input_type_url');
 const popup = document.querySelector('.popup_type_image');
 const popupImage = document.querySelector('.popup__image');
 const popupImageCaption = document.querySelector('.popup__caption');
+
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible',
+};
+
+enableValidation(validationConfig);
 
 function showImagePopup(cardImage) {
   popupImage.src = cardImage.src;
@@ -72,6 +87,7 @@ function handleCardFormSubmit(evt) {
   );
 
   addCardForm.reset();
+  clearValidation(addCardForm, validationConfig);
   closeModal(addCardPopup);
 }
 
@@ -82,6 +98,7 @@ editProfileBtn.addEventListener('click', () => {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
 
+  clearValidation(editProfileForm, validationConfig);
   openModal(editProfilePopup);
 });
 
@@ -96,5 +113,5 @@ pagePopups.forEach((popup) => {
     }
   });
 
-  popup.addEventListener('click', closeModalOnOverlay);
+  popup.addEventListener('mousedown', closeModalOnOverlay);
 });
