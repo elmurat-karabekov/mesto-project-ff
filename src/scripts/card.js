@@ -28,17 +28,21 @@ export function createCardElement(
   cardImage.addEventListener('click', () => {
     showImagePopup(cardImage);
   });
-  cardDeleteButton.addEventListener('click', deleteCard);
-  cardLikeButton.addEventListener('click', likeCard);
+
+  cardDeleteButton.addEventListener('click', (e) => {
+    deleteCard(e, cardData._id);
+  });
+
+  if (cardData.likes.some((user) => user._id === userId)) {
+    cardLikeButton.classList.add('card__like-button_is-active');
+  }
+
+  cardLikeButton.addEventListener('click', (e) => {
+    likeCard(e, cardData, cardLikeCount);
+  });
   cardLikeCount.textContent = cardData.likes.length || '';
 
   return cardElement;
-}
-
-export function deleteCard(evt) {
-  const card = evt.target.closest('.places__item.card');
-
-  card.remove();
 }
 
 export function likeCard(evt) {

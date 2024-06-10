@@ -1,11 +1,14 @@
 import './pages/index.css';
-import { createCardElement, deleteCard, likeCard } from './scripts/card';
+import { createCardElement } from './scripts/card';
 import { openModal, closeModal, closeModalOnOverlay } from './scripts/modal';
 import { clearValidation, enableValidation } from './scripts/validation';
 import {
   addNewCard,
+  deleteCardRequest,
+  dislike,
   getInitialCards,
   getUser,
+  like,
   updateUser,
 } from './scripts/api';
 
@@ -28,6 +31,24 @@ const jobInput = editProfileForm.querySelector(
 const profileImage = document.querySelector('.profile__image');
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+
+const deleteCard = (evt, cardId) => {
+  const card = evt.target.closest('.places__item.card');
+  card.remove();
+
+  deleteCardRequest(cardId);
+};
+
+const likeCard = (e, cardData, cardLikeCount) => {
+  if (e.target.classList.contains('card__like-button_is-active')) {
+    e.target.classList.remove('card__like-button_is-active');
+    dislike(cardData._id);
+  } else {
+    e.target.classList.add('card__like-button_is-active');
+    like(cardData._id);
+  }
+  cardLikeCount.textContent = cardData.likes.length || '';
+};
 
 Promise.all([getUser(), getInitialCards()])
   .then(([userData, initialCards]) => {
@@ -99,7 +120,7 @@ function handleCardFormSubmit(evt) {
     link: cardLinkInput.value,
   };
 
-  Promise.all([getUser(), addNewCard()])
+  Promise.all([getUser(), addNewCard(newCardData)])
     .then(([userData, newCardData]) => {
       placesList.prepend(
         createCardElement(
