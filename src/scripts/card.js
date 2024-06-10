@@ -3,7 +3,8 @@ export function createCardElement(
   cardData,
   showImagePopup,
   deleteCard,
-  likeCard
+  likeCard,
+  userId
 ) {
   const cardElement = cardTemplate
     .querySelector('.places__item.card')
@@ -12,6 +13,11 @@ export function createCardElement(
   const cardTitle = cardElement.querySelector('.card__title');
   const cardDeleteButton = cardElement.querySelector('.card__delete-button');
   const cardLikeButton = cardElement.querySelector('.card__like-button');
+  const cardLikeCount = cardElement.querySelector('.card__like-count');
+
+  if (cardData.owner._id !== userId) {
+    cardDeleteButton.remove();
+  }
 
   cardImage.src = cardData.link;
   cardImage.alt = `Фотография из коллекции пейзажных фотографии. На фото ${cardData.name}`;
@@ -24,6 +30,7 @@ export function createCardElement(
   });
   cardDeleteButton.addEventListener('click', deleteCard);
   cardLikeButton.addEventListener('click', likeCard);
+  cardLikeCount.textContent = cardData.likes.length || '';
 
   return cardElement;
 }

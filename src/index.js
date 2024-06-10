@@ -1,8 +1,13 @@
 import './pages/index.css';
-import { initialCards } from './scripts/cards';
 import { createCardElement, deleteCard, likeCard } from './scripts/card';
 import { openModal, closeModal, closeModalOnOverlay } from './scripts/modal';
 import { clearValidation, enableValidation } from './scripts/validation';
+import {
+  addNewCard,
+  getInitialCards,
+  getUser,
+  updateUser,
+} from './scripts/api';
 
 const cardTemplate = document.querySelector('#card-template').content;
 const placesList = document.querySelector('.places__list');
@@ -20,8 +25,30 @@ const jobInput = editProfileForm.querySelector(
   '.popup__input_type_description'
 );
 
+const profileImage = document.querySelector('.profile__image');
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
+
+Promise.all([getUser(), getInitialCards()])
+  .then(([userData, initialCards]) => {
+    profileImage.style.backgroundImage = `url(${userData.avatar})`;
+    profileName.textContent = userData.name;
+    profileDescription.textContent = userData.about;
+
+    initialCards.forEach((card) => {
+      placesList.append(
+        createCardElement(
+          cardTemplate,
+          card,
+          showImagePopup,
+          deleteCard,
+          likeCard,
+          userData._id
+        )
+      );
+    });
+  })
+  .catch((err) => console.log(err));
 
 nameInput.value = profileName.textContent;
 jobInput.value = profileDescription.textContent;
@@ -54,17 +81,13 @@ function showImagePopup(cardImage) {
   openModal(popup);
 }
 
-initialCards.forEach((card) =>
-  placesList.append(
-    createCardElement(cardTemplate, card, showImagePopup, deleteCard, likeCard)
-  )
-);
-
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
+
+  updateUser(nameInput.value, jobInput.value).catch((err) => console.log(err));
   closeModal(editProfilePopup);
 }
 
@@ -76,19 +99,24 @@ function handleCardFormSubmit(evt) {
     link: cardLinkInput.value,
   };
 
-  placesList.prepend(
-    createCardElement(
-      cardTemplate,
-      newCardData,
-      showImagePopup,
-      deleteCard,
-      likeCard
-    )
-  );
+  Promise.all([getUser(), addNewCard()])
+    .then(([userData, newCardData]) => {
+      placesList.prepend(
+        createCardElement(
+          cardTemplate,
+          newCardData,
+          showImagePopup,
+          deleteCard,
+          likeCard,
+          userData._id
+        )
+      );
 
-  addCardForm.reset();
-  clearValidation(addCardForm, validationConfig);
-  closeModal(addCardPopup);
+      addCardForm.reset();
+      clearValidation(addCardForm, validationConfig);
+      closeModal(addCardPopup);
+    })
+    .catch((err) => console.log(err));
 }
 
 editProfileForm.addEventListener('submit', handleProfileFormSubmit);
