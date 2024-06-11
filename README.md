@@ -1,39 +1,18 @@
-# Проектная работа Mesto
+# Mesto - demo project
 
-0. set/reset npm packages repo
-```
-npm set registry https://npm.prakticum-team.ru
-npm login
+This project was created as part of "Frontend-Developer" course by Yandex.Practicum. The objectives of this project:
+- use webpack to bundle project
+- practice form validation
+- working with API
 
-npm set registry https://registry.npmjs.org/
-```
+## Deploy link
 
-1. ```npm init -y```
+https://elmurat-karabekov.github.io/mesto-project-ff/
 
-2. ```npm i -D webpack webpack-cli webpack-dev-server```
+## Installation
+1. `npm run ci` - install dependencies
+2. `npm run dev` - run in dev mode
 
-3. create webpack config file - ```webpack.config.js```
-
-4. import ```path``` node module into webpack.config.js.
-- __dirname - current dir reference
-
-5. ```npm i -D @babel/core @babel/preset-env babel-loader``` - install Babel for transpilation + download one of many available preset rules for babel transpilation + babel loader for webpack
-
-6. ```npm i core-js``` - polyfill. Solvels cases where new syntax cannot be just achieved with simple transpilation
-
-7. create ```babel.config.js``` file
-
-8. ```npm i -D html-webpack-plugin``` - tell webpack how to work with HTML files
-
-9. ```npm i -D clean-webpack-plugin``` - clean dist/ on each build
-
-10. images & css load as assets;
-
-11. ```npm i -D css-loader mini-css-extract-plugin``` - how to work with css + @import statements to create single css bundle
-
-12. load Post css and two plugins for it:
-```npm i -D postcss-loader autoprefixer cssnano```
-
-13. create ```postcss.config.js``` file
-
-
+## TODO
+- feature/confirm-before delete
+- refactor code
