@@ -38,7 +38,7 @@ export function createCardElement(
   }
 
   cardLikeButton.addEventListener('click', (e) => {
-    likeCard(e, cardData, cardLikeCount);
+    likeCard(e, cardData._id, cardLikeCount);
   });
   cardLikeCount.textContent = cardData.likes.length || '';
 

@@ -9,6 +9,7 @@ import {
   getInitialCards,
   getUser,
   like,
+  updateProfileImage,
   updateUser,
 } from './scripts/api';
 
@@ -29,6 +30,13 @@ const jobInput = editProfileForm.querySelector(
 );
 
 const profileImage = document.querySelector('.profile__image');
+const updateProfileImagePopup = document.querySelector(
+  '.popup_type_update-avatar'
+);
+const updateProfileImageForm = document.forms['update-avatar'];
+const newProfileImageInput = updateProfileImageForm.querySelector(
+  '.popup__input_type_avatar-url'
+);
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
@@ -39,15 +47,22 @@ const deleteCard = (evt, cardId) => {
   deleteCardRequest(cardId);
 };
 
-const likeCard = (e, cardData, cardLikeCount) => {
+const likeCard = (e, cardId, cardLikeCount) => {
   if (e.target.classList.contains('card__like-button_is-active')) {
     e.target.classList.remove('card__like-button_is-active');
-    dislike(cardData._id);
+    dislike(cardId)
+      .then((card) => {
+        cardLikeCount.textContent = card.likes.length || '';
+      })
+      .catch((err) => console.log(err));
   } else {
     e.target.classList.add('card__like-button_is-active');
-    like(cardData._id);
+    like(cardId)
+      .then((card) => {
+        cardLikeCount.textContent = card.likes.length || '';
+      })
+      .catch((err) => console.log(err));
   }
-  cardLikeCount.textContent = cardData.likes.length || '';
 };
 
 Promise.all([getUser(), getInitialCards()])
@@ -105,11 +120,16 @@ function showImagePopup(cardImage) {
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
-  profileName.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
+  const submitButton = editProfileForm.querySelector('.popup__button');
+  submitButton.textContent = 'Сохранение...';
 
-  updateUser(nameInput.value, jobInput.value).catch((err) => console.log(err));
-  closeModal(editProfilePopup);
+  updateUser(nameInput.value, jobInput.value)
+    .then(() => {
+      profileName.textContent = nameInput.value;
+      profileDescription.textContent = jobInput.value;
+      closeModal(editProfilePopup);
+    })
+    .catch((err) => console.log(err));
 }
 
 function handleCardFormSubmit(evt) {
@@ -119,6 +139,9 @@ function handleCardFormSubmit(evt) {
     name: cardNameInput.value,
     link: cardLinkInput.value,
   };
+
+  const submitButton = addCardForm.querySelector('.popup__button');
+  submitButton.textContent = 'Сохранение...';
 
   Promise.all([getUser(), addNewCard(newCardData)])
     .then(([userData, newCardData]) => {
@@ -154,6 +177,28 @@ editProfileBtn.addEventListener('click', () => {
 addCardButton.addEventListener('click', () => {
   openModal(addCardPopup);
 });
+
+profileImage.addEventListener('click', (e) => {
+  openModal(updateProfileImagePopup);
+});
+
+const handleProfileImageFromSubmit = (e) => {
+  e.preventDefault();
+
+  const submitButton = updateProfileImageForm.querySelector('.popup__button');
+  submitButton.textContent = 'Сохранение...';
+
+  updateProfileImage(newProfileImageInput.value)
+    .then(() => {
+      profileImage.style.backgroundImage = `url(${newProfileImageInput.value})`;
+      updateProfileImageForm.reset();
+      clearValidation(updateProfileImageForm, validationConfig);
+      closeModal(updateProfileImagePopup);
+    })
+    .catch((err) => console.log(err));
+};
+
+updateProfileImageForm.addEventListener('submit', handleProfileImageFromSubmit);
 
 pagePopups.forEach((popup) => {
   popup.addEventListener('click', (evt) => {
