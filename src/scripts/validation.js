@@ -74,7 +74,6 @@ export function enableValidation({
 export function clearValidation(
   form,
   {
-    formSelector,
     inputSelector,
     submitButtonSelector,
     inactiveButtonClass,
@@ -87,8 +86,8 @@ export function clearValidation(
   const submitButton = form.querySelector(submitButtonSelector);
 
   inputs.forEach((input) => {
+    input.setCustomValidity('');
     const errorElement = form.querySelector(`.${input.id}-error`);
-    checkInputValidity(form, input, { inputErrorClass, errorClass });
     hideInputError(input, errorElement, { inputErrorClass, errorClass });
   });
   toggleButtonState(inputs, submitButton, inactiveButtonClass);

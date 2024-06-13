@@ -15,36 +15,44 @@ export function createCardElement(
   const cardLikeButton = cardElement.querySelector('.card__like-button');
   const cardLikeCount = cardElement.querySelector('.card__like-count');
 
-  if (cardData.owner._id !== userId) {
-    cardDeleteButton.remove();
-  }
+  const cardId = cardData._id;
 
   cardImage.src = cardData.link;
   cardImage.alt = `Фотография из коллекции пейзажных фотографии. На фото ${cardData.name}`;
   cardImage.dataset.imageCaption = cardData.name;
 
   cardTitle.textContent = cardData.name;
-
-  cardImage.addEventListener('click', () => {
-    showImagePopup(cardImage);
-  });
-
-  cardDeleteButton.addEventListener('click', (e) => {
-    deleteCard(e, cardData._id);
-  });
+  cardLikeCount.textContent = cardData.likes.length || '';
 
   if (cardData.likes.some((user) => user._id === userId)) {
     cardLikeButton.classList.add('card__like-button_is-active');
   }
 
-  cardLikeButton.addEventListener('click', (e) => {
-    likeCard(e, cardData._id, cardLikeCount);
+  cardImage.addEventListener('click', () => {
+    showImagePopup(cardImage);
   });
-  cardLikeCount.textContent = cardData.likes.length || '';
+
+  if (cardData.owner._id !== userId) {
+    cardDeleteButton.remove();
+  } else {
+    cardDeleteButton.addEventListener('click', (e) => {
+      deleteCard(cardId)
+        .then(() => {
+          const card = evt.target.closest('.places__item.card');
+          card.remove();
+        })
+        .catch((err) => console.log(err));
+    });
+  }
+
+  cardLikeButton.addEventListener('click', (e) => {
+    likeCard(e, cardId)
+      .then((card) => {
+        e.target.classList.toggle('card__like-button_is-active');
+        cardLikeCount.textContent = card.likes.length || '';
+      })
+      .catch((err) => console.log(err));
+  });
 
   return cardElement;
-}
-
-export function likeCard(evt) {
-  evt.target.classList.toggle('card__like-button_is-active');
 }
